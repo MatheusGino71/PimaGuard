@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PimaGuard | Prevenção de Diabetes Tipo 2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@300;400&family=Playfair+Display:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        ::-webkit-scrollbar { width: 0px; }
+        html { overflow-x: hidden; }
+        
+        /* Animações customizadas */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        .pulse-glow {
+            animation: pulse-glow 2s infinite;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        /* Efeito de loading */
+        .loader {
+            border: 2px solid #f4f3f0;
+            border-top: 2px solid #111;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Input focus style */
+        input:focus {
+            outline: none;
+            border-color: #111;
+            box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.1);
+        }
+        
+        /* Resultado animado */
+        .result-card {
+            animation: slideIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Risco cores */
+        .risk-low { background-color: rgba(34, 197, 94, 0.1); }
+        .risk-moderate { background-color: rgba(251, 191, 36, 0.1); }
+        .risk-high { background-color: rgba(249, 115, 22, 0.1); }
+        .risk-very-high { background-color: rgba(239, 68, 68, 0.1); }
+    </style>
+</head>
+<body class="bg-[#f4f3f0] text-[#111] font-['Inter'] antialiased selection:bg-black selection:text-[#f4f3f0]">
+
+    <!-- Menu Overlay -->
+    <div id="menu-overlay" class="fixed inset-0 bg-[#111] z-[100] flex flex-col justify-between p-6 md:p-12 transition-transform duration-700 ease-in-out translate-x-full">
+        <div class="flex justify-between items-center text-[#f4f3f0]">
+            <div class="flex items-center gap-4">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
+                </svg>
+                <span class="text-sm tracking-[0.2em] font-medium uppercase hidden md:block">PimaGuard</span>
+            </div>
+            <button id="close-menu" class="group flex items-center gap-4 text-xs tracking-[0.2em] uppercase font-medium hover:text-white/70 transition-colors">
+                Fechar
+                <div class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:border-white/50 transition-colors">
+                    <i data-lucide="x" class="w-4 h-4" stroke-width="1.5"></i>
+                </div>
+            </button>
+        </div>
+        <div class="flex flex-col gap-4 text-[#f4f3f0]">
+            <a href="#hero" class="font-['Bebas_Neue'] text-7xl md:text-9xl tracking-tight uppercase hover:text-white/50 transition-colors flex items-center gap-6 group">
+                <span class="text-sm font-['JetBrains_Mono'] tracking-widest text-white/30 group-hover:text-white/50 transition-colors">01</span> Saúde
+            </a>
+            <a href="#formula" class="font-['Bebas_Neue'] text-7xl md:text-9xl tracking-tight uppercase hover:text-white/50 transition-colors flex items-center gap-6 group">
+                <span class="text-sm font-['JetBrains_Mono'] tracking-widest text-white/30 group-hover:text-white/50 transition-colors">02</span> Predição
+            </a>
+        </div>
+        <div class="flex justify-between items-end text-[#f4f3f0] border-t border-white/10 pt-8 mt-12">
+            <div class="text-xs font-['JetBrains_Mono'] tracking-widest text-white/50">PREVENÇÃO<br>DIABETES TIPO 2</div>
+            <div class="flex gap-6 text-xs tracking-[0.2em] uppercase">
+                <a href="#" class="hover:text-white transition-colors">GitHub</a>
+                <a href="#" class="hover:text-white transition-colors">Contato</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="fixed top-0 left-0 w-full z-50 p-6 md:px-12 flex justify-between items-center mix-blend-difference text-[#f4f3f0]">
+        <div class="flex items-center gap-4">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
+            </svg>
+            <span class="text-sm tracking-[0.2em] font-medium uppercase hidden md:block mt-1">PimaGuard</span>
+        </div>
+        
+        <nav class="hidden lg:flex items-center gap-12 text-xs tracking-[0.2em] font-medium uppercase mt-1">
+            <a href="#hero" class="hover:opacity-70 transition-opacity">Início</a>
+            <a href="#sobre" class="hover:opacity-70 transition-opacity">Sobre</a>
+            <a href="#formula" class="hover:opacity-70 transition-opacity">Teste</a>
+        </nav>
+
+        <button id="open-menu" class="group flex items-center gap-4 text-xs tracking-[0.2em] uppercase font-medium mt-1">
+            Menu
+            <div class="w-10 h-10 rounded-full bg-[#f4f3f0] flex flex-wrap content-center justify-center gap-1 p-2.5 hover:scale-105 transition-transform">
+                <div class="w-1.5 h-1.5 rounded-full bg-[#111]"></div>
+                <div class="w-1.5 h-1.5 rounded-full bg-[#111]"></div>
+                <div class="w-1.5 h-1.5 rounded-full bg-[#111]"></div>
+                <div class="w-1.5 h-1.5 rounded-full bg-[#111]"></div>
+            </div>
+        </button>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section id="hero" class="relative min-h-screen pt-32 pb-0 flex flex-col justify-between">
+        <div class="absolute left-6 md:left-12 top-1/2 -translate-y-1/2 -rotate-90 origin-left text-xs font-['JetBrains_Mono'] tracking-widest text-[#111]/60 hidden md:block">Prevenção Ativa</div>
+        <div class="absolute right-6 md:right-12 top-1/2 -translate-y-1/2 rotate-90 origin-right text-xs font-['JetBrains_Mono'] tracking-widest text-[#111]/60 hidden md:block">ML + IA</div>
+
+        <div class="w-full max-w-[1800px] mx-auto px-6 md:px-24 flex-grow grid grid-cols-1 lg:grid-cols-12 gap-8 relative">
+            <div class="col-span-1 lg:col-span-7 relative z-20 flex flex-col justify-center pt-20 lg:pt-0">
+                <div class="absolute top-0 lg:-top-12 left-0 lg:left-1/3 bg-[#e8e7e1] p-5 w-64 text-xs font-['Inter'] tracking-[0.1em] uppercase text-[#111]/80 leading-relaxed shadow-sm hidden md:block">
+                    Inteligência artificial para saúde. Predição precisa de risco de diabetes tipo 2.
+                    <div class="w-2 h-2 bg-[#111] mt-6"></div>
+                </div>
+
+                <h1 class="font-['Bebas_Neue'] text-8xl md:text-[10rem] lg:text-[13rem] leading-[0.85] tracking-tight text-[#111] uppercase relative z-20 mix-blend-multiply fade-in-up">
+                    Sua<br>Saúde<br>Importa.
+                </h1>
+
+                <div class="mt-8 md:mt-12 flex flex-col gap-8">
+                    <p class="font-['JetBrains_Mono'] text-sm tracking-[0.2em] uppercase text-[#111]/80 leading-loose">
+                        Detecção precoce. Prevenção eficaz.<br>Tecnologia de IA aplicada à medicina preventiva.
+                    </p>
+
+                    <a href="#formula" class="group inline-flex items-center gap-4 text-xs font-['Inter'] tracking-[0.2em] uppercase font-medium hover:opacity-70 transition-opacity w-fit mt-4">
+                        <i data-lucide="arrow-down-right" class="w-4 h-4" stroke-width="1.5"></i>
+                        Fazer Avaliação
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-span-1 lg:col-span-5 relative h-[50vh] lg:h-[80vh] mt-12 lg:mt-0 z-10">
+                <div class="absolute top-0 right-0 w-full lg:w-[120%] h-[90%] bg-[#e5e4df] -z-10"></div>
+                <div class="w-full h-full relative overflow-hidden border border-[#111]/10 bg-[radial-gradient(circle_at_top_right,_rgba(17,17,17,0.22),_transparent_35%),linear-gradient(135deg,_#f4f3f0_0%,_#d9d6cf_45%,_#bcb7ad_100%)]">
+                    <div class="absolute inset-0 bg-[linear-gradient(rgba(17,17,17,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(17,17,17,0.08)_1px,transparent_1px)] bg-[size:32px_32px] opacity-50"></div>
+                    <div class="absolute inset-0 flex flex-col justify-between p-6 md:p-10 text-[#111]">
+                        <div class="self-end max-w-[220px] text-right text-[10px] font-['JetBrains_Mono'] tracking-[0.24em] uppercase text-[#111]/60">
+                            Clinical Intelligence
+                            <div class="mt-3 h-px w-full bg-[#111]/15"></div>
+                        </div>
+                        <div class="space-y-4 max-w-sm">
+                            <div class="inline-flex items-center gap-2 px-3 py-2 border border-[#111]/15 bg-white/60 text-[10px] font-['JetBrains_Mono'] tracking-[0.24em] uppercase">
+                                <span class="w-2 h-2 rounded-full bg-[#111]"></span>
+                                Risk Modeling Engine
+                            </div>
+                            <p class="font-['Playfair_Display'] text-3xl md:text-4xl font-light leading-tight">
+                                Precision, transparency and preventive care in a single interface.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SOBRE SECTION -->
+    <section id="sobre" class="py-32 px-6 md:px-12 bg-[#111] text-[#f4f3f0]">
+        <div class="max-w-[1800px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+            <div class="lg:col-span-5 order-2 lg:order-1">
+                <div class="text-[10px] font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-[#f4f3f0]/50 mb-8 flex items-center gap-4">
+                    <span class="w-8 h-px bg-[#f4f3f0]/30"></span> Sobre o Sistema
+                </div>
+                <h2 class="font-['Playfair_Display'] text-4xl md:text-5xl lg:text-6xl tracking-tight leading-tight font-light mb-12">
+                    Inteligência artificial aplicada à medicina preventiva com absoluta transparência.
+                </h2>
+                <p class="text-base font-light text-[#f4f3f0]/70 leading-relaxed max-w-md mb-12">
+                    PimaGuard utiliza algoritmos de aprendizado de máquina treinados em dados reais para prever o risco de diabetes tipo 2. Com explicabilidade SHAP, você entende exatamente quais fatores influenciam sua predição.
+                </p>
+                <div class="grid grid-cols-2 gap-8">
+                    <div>
+                        <p class="text-3xl font-['JetBrains_Mono'] text-[#f4f3f0] mb-2">2</p>
+                        <p class="text-xs text-[#f4f3f0]/60 uppercase tracking-widest">Modelos IA</p>
+                    </div>
+                    <div>
+                        <p class="text-3xl font-['JetBrains_Mono'] text-[#f4f3f0] mb-2">8</p>
+                        <p class="text-xs text-[#f4f3f0]/60 uppercase tracking-widest">Variáveis Médicas</p>
+                    </div>
+                </div>
+            </div>
+            <div class="lg:col-span-7 order-1 lg:order-2 h-[50vh] lg:h-[80vh] w-full">
+                <div class="w-full h-full relative overflow-hidden border border-white/10 bg-[radial-gradient(circle_at_20%_20%,rgba(244,243,240,0.14),transparent_35%),linear-gradient(135deg,#111 0%,#1c1c1c 55%,#2b2b2b 100%)]">
+                    <div class="absolute inset-0 bg-[linear-gradient(rgba(244,243,240,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(244,243,240,0.08)_1px,transparent_1px)] bg-[size:36px_36px] opacity-40"></div>
+                    <div class="absolute inset-0 flex flex-col justify-between p-6 md:p-10 text-[#f4f3f0]">
+                        <div class="self-start max-w-[260px] text-[10px] font-['JetBrains_Mono'] tracking-[0.24em] uppercase text-white/55">
+                            AI-assisted prevention
+                            <div class="mt-3 h-px w-full bg-white/15"></div>
+                        </div>
+                        <div class="max-w-md space-y-4">
+                            <p class="text-sm uppercase tracking-[0.2em] text-white/55 font-['JetBrains_Mono']">Clinical dashboard</p>
+                            <p class="font-['Playfair_Display'] text-3xl md:text-5xl font-light leading-tight">
+                                Built to surface risk signals before they become symptoms.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DATASET DASHBOARD SECTION -->
+    <section id="dataset-dashboard" class="py-28 px-6 md:px-12 bg-[#f4f3f0] border-y border-[#111]/10">
+        <div class="max-w-[1200px] mx-auto">
+            <div class="text-center mb-16">
+                <div class="text-[10px] font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-[#111]/50 mb-6 flex items-center justify-center gap-4">
+                    <span class="w-8 h-px bg-[#111]/30"></span> Dataset Intelligence <span class="w-8 h-px bg-[#111]/30"></span>
+                </div>
+                <h2 class="font-['Bebas_Neue'] text-6xl md:text-7xl tracking-tight text-[#111] uppercase mb-4">
+                    O Dataset em Números
+                </h2>
+                <p class="text-base text-[#111]/60 max-w-2xl mx-auto font-light">
+                    Painel com a leitura estatística do arquivo `archive.zip` e das variáveis clínicas que alimentam o modelo.
+                </p>
+            </div>
+
+            <div id="dataset-loading" class="mb-12 flex items-center justify-center gap-4 text-xs font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-[#111]/50">
+                <div class="loader"></div>
+                Carregando resumo do dataset...
+            </div>
+
+            <div id="dataset-dashboard-content" class="hidden space-y-10">
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+                    <div class="p-6 bg-white border border-[#111]/10">
+                        <p class="text-[10px] font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-[#111]/50 mb-2">Registros</p>
+                        <p id="dataset-rows" class="font-['Bebas_Neue'] text-5xl leading-none">--</p>
+                    </div>
+                    <div class="p-6 bg-white border border-[#111]/10">
+                        <p class="text-[10px] font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-[#111]/50 mb-2">Variáveis</p>
+                        <p id="dataset-features" class="font-['Bebas_Neue'] text-5xl leading-none">--</p>
+                    </div>
+                    <div class="p-6 bg-white border border-[#111]/10">
+                        <p class="text-[10px] font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-[#111]/50 mb-2">Taxa positiva</p>
+                        <p id="dataset-positive-rate" class="font-['Bebas_Neue'] text-5xl leading-none">--</p>
+                    </div>
+                    <div class="p-6 bg-white border border-[#111]/10">
+                        <p class="text-[10px] font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-[#111]/50 mb-2">Valores ausentes</p>
+                        <p id="dataset-missing-values" class="font-['Bebas_Neue'] text-5xl leading-none">--</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="p-8 bg-white border border-[#111]/10">
+                        <div class="flex items-center justify-between mb-8">
+                            <p class="text-xs font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-[#111]/50">Distribuição de Classes</p>
+                            <p id="dataset-positive-label" class="text-xs font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-[#111]/50">--</p>
+                        </div>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between text-xs font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-[#111]/50 mb-2">
+                                    <span>Sem Diabetes</span>
+                                    <span id="dataset-negative-count">--</span>
+                                </div>
+                                <div class="h-3 bg-[#111]/10 overflow-hidden">
+                                    <div id="dataset-negative-bar" class="h-full bg-[#111]" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-[#111]/50 mb-2">
+                                    <span>Com Diabetes</span>
+                                    <span id="dataset-positive-count">--</span>
+                                </div>
+                                <div class="h-3 bg-[#111]/10 overflow-hidden">
+                                    <div id="dataset-positive-bar" class="h-full bg-[#a64d39]" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-8 bg-white border border-[#111]/10">
+                        <p class="text-xs font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-[#111]/50 mb-8">Médias Principais</p>
+                        <div id="dataset-feature-cards" class="grid grid-cols-2 gap-4"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MONITORING DASHBOARD SECTION -->
+    <section id="monitoring-dashboard" class="py-28 px-6 md:px-12 bg-[#111] text-[#f4f3f0] border-y border-white/10">
+        <div class="max-w-[1200px] mx-auto">
+            <div class="text-center mb-16">
+                <div class="text-[10px] font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-[#f4f3f0]/50 mb-6 flex items-center justify-center gap-4">
+                    <span class="w-8 h-px bg-white/30"></span> Model Monitoring <span class="w-8 h-px bg-white/30"></span>
+                </div>
+                <h2 class="font-['Bebas_Neue'] text-6xl md:text-7xl tracking-tight text-[#f4f3f0] uppercase mb-4">
+                    Monitoramento do Modelo
+                </h2>
+                <p class="text-base text-[#f4f3f0]/60 max-w-2xl mx-auto font-light">
+                    Métricas do conjunto de teste e sinais de desempenho para acompanhar a qualidade da predição ao longo do tempo.
+                </p>
+            </div>
+
+            <div id="monitoring-loading" class="mb-12 flex items-center justify-center gap-4 text-xs font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-[#f4f3f0]/50">
+                <div class="loader"></div>
+                Carregando métricas de monitoramento...
+            </div>
+
+            <div id="monitoring-dashboard-content" class="hidden space-y-10">
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+                    <div class="p-6 bg-[#1b1b1b] border border-white/10">
+                        <p class="text-[10px] font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-white/50 mb-2">Modelo em destaque</p>
+                        <p id="monitoring-selected-model" class="font-['Bebas_Neue'] text-5xl leading-none">--</p>
+                    </div>
+                    <div class="p-6 bg-[#1b1b1b] border border-white/10">
+                        <p class="text-[10px] font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-white/50 mb-2">Amostras de teste</p>
+                        <p id="monitoring-test-samples" class="font-['Bebas_Neue'] text-5xl leading-none">--</p>
+                    </div>
+                    <div class="p-6 bg-[#1b1b1b] border border-white/10">
+                        <p class="text-[10px] font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-white/50 mb-2">Acurácia</p>
+                        <p id="monitoring-accuracy" class="font-['Bebas_Neue'] text-5xl leading-none">--</p>
+                    </div>
+                    <div class="p-6 bg-[#1b1b1b] border border-white/10">
+                        <p class="text-[10px] font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-white/50 mb-2">AUC</p>
+                        <p id="monitoring-auc" class="font-['Bebas_Neue'] text-5xl leading-none">--</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="p-8 bg-[#1b1b1b] border border-white/10">
+                        <p class="text-xs font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-white/50 mb-8">Métricas do Modelo</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="p-4 bg-white/5 border border-white/10">
+                                <p class="text-[10px] uppercase tracking-[0.2em] text-white/50 mb-2">Precisão</p>
+                                <p id="monitoring-precision" class="font-['Bebas_Neue'] text-4xl">--</p>
+                            </div>
+                            <div class="p-4 bg-white/5 border border-white/10">
+                                <p class="text-[10px] uppercase tracking-[0.2em] text-white/50 mb-2">Recall</p>
+                                <p id="monitoring-recall" class="font-['Bebas_Neue'] text-4xl">--</p>
+                            </div>
+                            <div class="p-4 bg-white/5 border border-white/10">
+                                <p class="text-[10px] uppercase tracking-[0.2em] text-white/50 mb-2">F1 Score</p>
+                                <p id="monitoring-f1" class="font-['Bebas_Neue'] text-4xl">--</p>
+                            </div>
+                            <div class="p-4 bg-white/5 border border-white/10">
+                                <p class="text-[10px] uppercase tracking-[0.2em] text-white/50 mb-2">Matriz</p>
+                                <p id="monitoring-confusion" class="font-['JetBrains_Mono'] text-sm leading-relaxed text-white/70">--</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-8 bg-[#1b1b1b] border border-white/10">
+                        <p class="text-xs font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-white/50 mb-8">Importância das Variáveis</p>
+                        <div id="monitoring-feature-cards" class="space-y-4"></div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="p-8 bg-[#1b1b1b] border border-white/10">
+                        <p class="text-xs font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-white/50 mb-8">Random Forest</p>
+                        <div class="grid grid-cols-2 gap-4 text-sm text-white/70">
+                            <div>Accuracy: <span id="monitoring-rf-accuracy" class="text-white">--</span></div>
+                            <div>AUC: <span id="monitoring-rf-auc" class="text-white">--</span></div>
+                            <div>Precision: <span id="monitoring-rf-precision" class="text-white">--</span></div>
+                            <div>Recall: <span id="monitoring-rf-recall" class="text-white">--</span></div>
+                        </div>
+                    </div>
+
+                    <div class="p-8 bg-[#1b1b1b] border border-white/10">
+                        <p class="text-xs font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-white/50 mb-8">Regressão Logística</p>
+                        <div class="grid grid-cols-2 gap-4 text-sm text-white/70">
+                            <div>Accuracy: <span id="monitoring-lr-accuracy" class="text-white">--</span></div>
+                            <div>AUC: <span id="monitoring-lr-auc" class="text-white">--</span></div>
+                            <div>Precision: <span id="monitoring-lr-precision" class="text-white">--</span></div>
+                            <div>Recall: <span id="monitoring-lr-recall" class="text-white">--</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FORMULÁRIO & PREDIÇÃO SECTION -->
+    <section id="formula" class="py-32 px-6 md:px-12 bg-[#f4f3f0]">
+        <div class="max-w-[1200px] mx-auto">
+            <div class="text-center mb-20">
+                <div class="text-[10px] font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-[#111]/50 mb-6 flex items-center justify-center gap-4">
+                    <span class="w-8 h-px bg-[#111]/30"></span> Avaliação Personalizada <span class="w-8 h-px bg-[#111]/30"></span>
+                </div>
+                <h2 class="font-['Bebas_Neue'] text-6xl md:text-7xl tracking-tight text-[#111] uppercase mb-6">
+                    Sua Avaliação
+                </h2>
+                <p class="text-base text-[#111]/60 max-w-md mx-auto font-light">
+                    Forneça seus dados médicos para uma análise de risco personalizada alimentada por inteligência artificial.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- FORMULÁRIO -->
+                <div class="flex flex-col justify-between">
+                    <form id="prediction-form" class="space-y-8">
+                        <!-- Pregnancies -->
+                        <div>
+                            <label class="block text-xs font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-[#111]/70 mb-3">Gestações</label>
+                            <input 
+                                type="number" 
+                                id="pregnancies" 
+                                name="pregnancies"
+                                placeholder="0"
+                                min="0"
+                                step="0.1"
+                                class="w-full px-6 py-4 border border-[#111]/20 bg-white text-[#111] text-sm transition-all hover:border-[#111]/40 focus:border-[#111]"
+                                required
+                            >
+                            <p class="text-xs text-[#111]/50 mt-2">Número de vezes grávida</p>
+                        </div>
+
+                        <!-- Glucose -->
+                        <div>
+                            <label class="block text-xs font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-[#111]/70 mb-3">Glicose (mg/dL)</label>
+                            <input 
+                                type="number" 
+                                id="glucose" 
+                                name="glucose"
+                                placeholder="100"
+                                min="0"
+                                step="0.1"
+                                class="w-full px-6 py-4 border border-[#111]/20 bg-white text-[#111] text-sm transition-all hover:border-[#111]/40 focus:border-[#111]"
+                                required
+                            >
+                            <p class="text-xs text-[#111]/50 mt-2">Medição de glicose em jejum</p>
+                        </div>
+
+                        <!-- Blood Pressure -->
+                        <div>
+                            <label class="block text-xs font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-[#111]/70 mb-3">Pressão Sanguínea (mmHg)</label>
+                            <input 
+                                type="number" 
+                                id="blood_pressure" 
+                                name="blood_pressure"
+                                placeholder="70"
+                                min="0"
+                                step="0.1"
+                                class="w-full px-6 py-4 border border-[#111]/20 bg-white text-[#111] text-sm transition-all hover:border-[#111]/40 focus:border-[#111]"
+                                required
+                            >
+                            <p class="text-xs text-[#111]/50 mt-2">Pressão diastólica</p>
+                        </div>
+
+                        <!-- Skin Thickness -->
+                        <div>
+                            <label class="block text-xs font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-[#111]/70 mb-3">Espessura da Pele (mm)</label>
+                            <input 
+                                type="number" 
+                                id="skin_thickness" 
+                                name="skin_thickness"
+                                placeholder="20"
+                                min="0"
+                                step="0.1"
+                                class="w-full px-6 py-4 border border-[#111]/20 bg-white text-[#111] text-sm transition-all hover:border-[#111]/40 focus:border-[#111]"
+                                required
+                            >
+                            <p class="text-xs text-[#111]/50 mt-2">Espessura da dobra tricipital</p>
+                        </div>
+
+                        <!-- Insulin -->
+                        <div>
+                            <label class="block text-xs font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-[#111]/70 mb-3">Insulina (µU/ml)</label>
+                            <input 
+                                type="number" 
+                                id="insulin" 
+                                name="insulin"
+                                placeholder="30"
+                                min="0"
+                                step="0.1"
+                                class="w-full px-6 py-4 border border-[#111]/20 bg-white text-[#111] text-sm transition-all hover:border-[#111]/40 focus:border-[#111]"
+                                required
+                            >
+                            <p class="text-xs text-[#111]/50 mt-2">Insulina sérica de 2 horas</p>
+                        </div>
+
+                        <!-- BMI -->
+                        <div>
+                            <label class="block text-xs font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-[#111]/70 mb-3">IMC (kg/m²)</label>
+                            <input 
+                                type="number" 
+                                id="bmi" 
+                                name="bmi"
+                                placeholder="25"
+                                min="0"
+                                step="0.1"
+                                class="w-full px-6 py-4 border border-[#111]/20 bg-white text-[#111] text-sm transition-all hover:border-[#111]/40 focus:border-[#111]"
+                                required
+                            >
+                            <p class="text-xs text-[#111]/50 mt-2">Índice de Massa Corporal</p>
+                        </div>
+
+                        <!-- Diabetes Pedigree Function -->
+                        <div>
+                            <label class="block text-xs font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-[#111]/70 mb-3">Histórico Familiar</label>
+                            <input 
+                                type="number" 
+                                id="diabetes_pedigree_function" 
+                                name="diabetes_pedigree_function"
+                                placeholder="0.5"
+                                min="0"
+                                step="0.01"
+                                class="w-full px-6 py-4 border border-[#111]/20 bg-white text-[#111] text-sm transition-all hover:border-[#111]/40 focus:border-[#111]"
+                                required
+                            >
+                            <p class="text-xs text-[#111]/50 mt-2">Função pedigree do diabetes (0-1)</p>
+                        </div>
+
+                        <!-- Age -->
+                        <div>
+                            <label class="block text-xs font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-[#111]/70 mb-3">Idade (anos)</label>
+                            <input 
+                                type="number" 
+                                id="age" 
+                                name="age"
+                                placeholder="30"
+                                min="0"
+                                step="1"
+                                class="w-full px-6 py-4 border border-[#111]/20 bg-white text-[#111] text-sm transition-all hover:border-[#111]/40 focus:border-[#111]"
+                                required
+                            >
+                            <p class="text-xs text-[#111]/50 mt-2">Sua idade em anos</p>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button 
+                            type="submit" 
+                            id="submit-btn"
+                            class="w-full py-4 mt-12 bg-[#111] text-[#f4f3f0] font-['Inter'] text-sm tracking-[0.2em] uppercase font-medium transition-all hover:bg-black/80 active:scale-95"
+                        >
+                            Analisar Risco
+                        </button>
+                    </form>
+                </div>
+
+                <!-- RESULTADO -->
+                <div id="result-container" class="hidden flex flex-col justify-between">
+                    <div id="result-content" class="result-card space-y-8">
+                        <!-- Risk Score -->
+                        <div class="space-y-4">
+                            <p class="text-xs font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-[#111]/50">Risco de Diabetes</p>
+                            <div id="risk-display" class="space-y-4">
+                                <div id="risk-percentage" class="font-['Bebas_Neue'] text-7xl tracking-tight text-[#111]">
+                                    -- %
+                                </div>
+                                <div id="risk-level" class="inline-block px-6 py-3 border border-[#111]/20 text-xs font-['JetBrains_Mono'] tracking-widest uppercase">
+                                    --
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Risk Factors -->
+                        <div class="space-y-4">
+                            <p class="text-xs font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-[#111]/50 flex items-center gap-2">
+                                <i data-lucide="alert-circle" class="w-4 h-4"></i> Principais Fatores de Risco
+                            </p>
+                            <div id="risk-factors" class="space-y-3">
+                                <!-- Factors will be populated here -->
+                            </div>
+                        </div>
+
+                        <!-- Model Info -->
+                        <div class="space-y-3 pt-8 border-t border-[#111]/10">
+                            <p class="text-xs font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-[#111]/50">Detalhes da Análise</p>
+                            <div class="grid grid-cols-2 gap-4 text-xs">
+                                <div>
+                                    <p id="model-used" class="text-[#111]/60">Modelo: --</p>
+                                </div>
+                                <div>
+                                    <p id="confidence" class="text-[#111]/60">Confiança: --%</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex gap-4 pt-8">
+                            <button onclick="resetForm()" class="flex-1 py-3 border border-[#111]/20 text-[#111] font-['Inter'] text-xs tracking-[0.2em] uppercase font-medium transition-all hover:border-[#111]/40">
+                                Nova Avaliação
+                            </button>
+                            <button onclick="downloadReport()" class="flex-1 py-3 bg-[#111] text-[#f4f3f0] font-['Inter'] text-xs tracking-[0.2em] uppercase font-medium transition-all hover:bg-black/80">
+                                Relatório
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div id="loading-container" class="hidden flex flex-col justify-center items-center space-y-8">
+                    <div class="loader"></div>
+                    <p class="text-xs font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-[#111]/50">Analisando seu risco...</p>
+                </div>
+
+                <!-- Error State -->
+                <div id="error-container" class="hidden flex flex-col justify-center items-center space-y-6 p-8 bg-red-50 border border-red-200">
+                    <div class="text-red-600">
+                        <i data-lucide="alert-triangle" class="w-8 h-8"></i>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-sm font-medium text-red-900 mb-2">Erro na Análise</p>
+                        <p id="error-message" class="text-xs text-red-700"></p>
+                    </div>
+                    <button onclick="resetForm()" class="text-xs font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-red-600 hover:text-red-700 font-medium">
+                        Tentar Novamente
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#111] text-[#f4f3f0] py-12 px-6 md:px-12">
+        <div class="max-w-[1800px] mx-auto flex justify-between items-center border-t border-white/10 pt-8">
+            <div class="text-xs font-['JetBrains_Mono'] tracking-widest text-white/50">
+                PIMAGUARD © 2025<br>Prevenção de Diabetes
+            </div>
+            <div class="flex gap-6 text-xs tracking-[0.2em] uppercase">
+                <a href="#" class="hover:text-white transition-colors">Privacidade</a>
+                <a href="#" class="hover:text-white transition-colors">Termos</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        lucide.createIcons();
+
+        // =====================================================================
+        // Menu Toggle
+        // =====================================================================
+        const openBtn = document.getElementById('open-menu');
+        const closeBtn = document.getElementById('close-menu');
+        const menuOverlay = document.getElementById('menu-overlay');
+
+        openBtn.addEventListener('click', () => {
+            menuOverlay.classList.remove('translate-x-full');
+            document.body.style.overflow = 'hidden';
+        });
+
+        closeBtn.addEventListener('click', () => {
+            menuOverlay.classList.add('translate-x-full');
+            document.body.style.overflow = '';
+        });
+
+        // Close menu when clicking on a link
+        menuOverlay.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                menuOverlay.classList.add('translate-x-full');
+                document.body.style.overflow = '';
+            });
+        });
+
+        // =====================================================================
+        // Form Submission & Prediction
+        // =====================================================================
+        const form = document.getElementById('prediction-form');
+        const resultContainer = document.getElementById('result-container');
+        const loadingContainer = document.getElementById('loading-container');
+        const errorContainer = document.getElementById('error-container');
+        const submitBtn = document.getElementById('submit-btn');
+        const datasetLoading = document.getElementById('dataset-loading');
+        const datasetDashboardContent = document.getElementById('dataset-dashboard-content');
+        const monitoringLoading = document.getElementById('monitoring-loading');
+        const monitoringDashboardContent = document.getElementById('monitoring-dashboard-content');
+        const API_BASE_URL = (() => {
+            if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
+                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                    return 'http://127.0.0.1:8000';
+                }
+                return window.location.origin;
+            }
+
+            return 'http://127.0.0.1:8000';
+        })();
+
+        async function loadDatasetSummary() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/dataset-summary`);
+                if (!response.ok) {
+                    throw new Error('Não foi possível carregar o resumo do dataset.');
+                }
+
+                const summary = await response.json();
+                renderDatasetSummary(summary);
+            } catch (error) {
+                console.error('Erro ao carregar dataset summary:', error);
+                datasetLoading.textContent = 'Resumo do dataset indisponível no momento.';
+            }
+        }
+
+        function renderDatasetSummary(summary) {
+            document.getElementById('dataset-rows').textContent = summary.rows.toLocaleString('pt-BR');
+            document.getElementById('dataset-features').textContent = summary.features.toString();
+            document.getElementById('dataset-positive-rate').textContent = `${summary.positive_rate}%`;
+            document.getElementById('dataset-missing-values').textContent = summary.missing_values.toLocaleString('pt-BR');
+            document.getElementById('dataset-positive-label').textContent = `${summary.class_balance.positive} positivos`;
+            document.getElementById('dataset-negative-count').textContent = summary.class_balance.negative.toLocaleString('pt-BR');
+            document.getElementById('dataset-positive-count').textContent = summary.class_balance.positive.toLocaleString('pt-BR');
+
+            const total = summary.class_balance.negative + summary.class_balance.positive;
+            const negativeWidth = total > 0 ? (summary.class_balance.negative / total) * 100 : 0;
+            const positiveWidth = total > 0 ? (summary.class_balance.positive / total) * 100 : 0;
+            document.getElementById('dataset-negative-bar').style.width = `${negativeWidth}%`;
+            document.getElementById('dataset-positive-bar').style.width = `${positiveWidth}%`;
+
+            const featureCards = document.getElementById('dataset-feature-cards');
+            featureCards.innerHTML = '';
+
+            Object.entries(summary.feature_means).forEach(([feature, value]) => {
+                const card = document.createElement('div');
+                card.className = 'p-4 border border-[#111]/10 bg-[#f4f3f0]';
+                card.innerHTML = `
+                    <p class="text-[10px] font-['JetBrains_Mono'] tracking-[0.2em] uppercase text-[#111]/50 mb-2">${feature}</p>
+                    <p class="font-['Bebas_Neue'] text-4xl leading-none text-[#111]">${value}</p>
+                `;
+                featureCards.appendChild(card);
+            });
+
+            datasetLoading.classList.add('hidden');
+            datasetDashboardContent.classList.remove('hidden');
+        }
+
+        async function loadMonitoringSummary() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/monitoring-summary`);
+                if (!response.ok) {
+                    throw new Error('Não foi possível carregar o monitoramento do modelo.');
+                }
+
+                const summary = await response.json();
+                renderMonitoringSummary(summary);
+            } catch (error) {
+                console.error('Erro ao carregar monitoring summary:', error);
+                monitoringLoading.textContent = 'Monitoramento indisponível no momento.';
+            }
+        }
+
+        function renderMonitoringSummary(summary) {
+            const selectedModelMetrics = summary.models[summary.selected_model];
+            document.getElementById('monitoring-selected-model').textContent = summary.selected_model;
+            document.getElementById('monitoring-test-samples').textContent = summary.test_samples.toLocaleString('pt-BR');
+            document.getElementById('monitoring-accuracy').textContent = `${selectedModelMetrics.accuracy}%`;
+            document.getElementById('monitoring-auc').textContent = `${selectedModelMetrics.auc}%`;
+            document.getElementById('monitoring-precision').textContent = `${selectedModelMetrics.precision}%`;
+            document.getElementById('monitoring-recall').textContent = `${selectedModelMetrics.recall}%`;
+            document.getElementById('monitoring-f1').textContent = `${selectedModelMetrics.f1}%`;
+            document.getElementById('monitoring-confusion').textContent = `TN ${selectedModelMetrics.confusion_matrix.tn}  FP ${selectedModelMetrics.confusion_matrix.fp}\nFN ${selectedModelMetrics.confusion_matrix.fn}  TP ${selectedModelMetrics.confusion_matrix.tp}`;
+
+            const featureCards = document.getElementById('monitoring-feature-cards');
+            featureCards.innerHTML = '';
+
+            Object.entries(summary.feature_importance).forEach(([feature, value]) => {
+                const row = document.createElement('div');
+                row.className = 'space-y-2';
+                row.innerHTML = `
+                    <div class="flex items-center justify-between text-xs uppercase tracking-[0.2em] text-white/55">
+                        <span>${feature}</span>
+                        <span>${value}%</span>
+                    </div>
+                    <div class="h-3 bg-white/10 overflow-hidden">
+                        <div class="h-full bg-[#f4f3f0]" style="width: ${value}%"></div>
+                    </div>
+                `;
+                featureCards.appendChild(row);
+            });
+
+            document.getElementById('monitoring-rf-accuracy').textContent = `${summary.models['Random Forest'].accuracy}%`;
+            document.getElementById('monitoring-rf-auc').textContent = `${summary.models['Random Forest'].auc}%`;
+            document.getElementById('monitoring-rf-precision').textContent = `${summary.models['Random Forest'].precision}%`;
+            document.getElementById('monitoring-rf-recall').textContent = `${summary.models['Random Forest'].recall}%`;
+
+            document.getElementById('monitoring-lr-accuracy').textContent = `${summary.models['Regressão Logística'].accuracy}%`;
+            document.getElementById('monitoring-lr-auc').textContent = `${summary.models['Regressão Logística'].auc}%`;
+            document.getElementById('monitoring-lr-precision').textContent = `${summary.models['Regressão Logística'].precision}%`;
+            document.getElementById('monitoring-lr-recall').textContent = `${summary.models['Regressão Logística'].recall}%`;
+
+            monitoringLoading.classList.add('hidden');
+            monitoringDashboardContent.classList.remove('hidden');
+        }
+
+        loadDatasetSummary();
+        loadMonitoringSummary();
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Get form data
+            const formData = new FormData(form);
+            const data = {
+                pregnancies: parseFloat(formData.get('pregnancies')),
+                glucose: parseFloat(formData.get('glucose')),
+                blood_pressure: parseFloat(formData.get('blood_pressure')),
+                skin_thickness: parseFloat(formData.get('skin_thickness')),
+                insulin: parseFloat(formData.get('insulin')),
+                bmi: parseFloat(formData.get('bmi')),
+                diabetes_pedigree_function: parseFloat(formData.get('diabetes_pedigree_function')),
+                age: parseFloat(formData.get('age'))
+            };
+
+            // Show loading state
+            resultContainer.classList.add('hidden');
+            errorContainer.classList.add('hidden');
+            loadingContainer.classList.remove('hidden');
+            submitBtn.disabled = true;
+
+            try {
+                // Make API request
+                const response = await fetch(`${API_BASE_URL}/predict`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erro na API: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+
+                // Display result
+                displayResult(result);
+
+            } catch (error) {
+                console.error('Erro:', error);
+                displayError(error.message);
+            } finally {
+                loadingContainer.classList.add('hidden');
+                submitBtn.disabled = false;
+            }
+        });
+
+        // =====================================================================
+        // Display Result
+        // =====================================================================
+        function displayResult(data) {
+            // Risk percentage
+            document.getElementById('risk-percentage').textContent = `${data.diabetes_risk_percentage}%`;
+
+            // Risk level with color
+            const riskLevelDiv = document.getElementById('risk-level');
+            riskLevelDiv.textContent = data.risk_level.toUpperCase();
+            
+            // Apply color based on risk level
+            riskLevelDiv.className = 'inline-block px-6 py-3 border border-[#111]/20 text-xs font-["JetBrains_Mono"] tracking-widest uppercase transition-all';
+            
+            if (data.risk_level === 'Baixo') {
+                riskLevelDiv.classList.add('risk-low', 'border-green-300');
+            } else if (data.risk_level === 'Moderado') {
+                riskLevelDiv.classList.add('risk-moderate', 'border-yellow-300');
+            } else if (data.risk_level === 'Alto') {
+                riskLevelDiv.classList.add('risk-high', 'border-orange-300');
+            } else {
+                riskLevelDiv.classList.add('risk-very-high', 'border-red-300');
+            }
+
+            // Risk factors
+            const riskFactorsDiv = document.getElementById('risk-factors');
+            riskFactorsDiv.innerHTML = '';
+            
+            data.risk_factors.forEach((factor, index) => {
+                const factorEl = document.createElement('div');
+                factorEl.className = 'flex items-center justify-between p-4 bg-[#111]/5 border border-[#111]/10';
+                factorEl.innerHTML = `
+                    <div>
+                        <p class="text-xs font-['JetBrains_Mono'] uppercase tracking-widest text-[#111]/70">${factor.feature}</p>
+                        <p class="text-xs text-[#111]/50 mt-1">Impacto: ${factor.impact_percentage.toFixed(1)}%</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm font-medium text-[#111]">${factor.impact_percentage.toFixed(1)}%</p>
+                    </div>
+                `;
+                riskFactorsDiv.appendChild(factorEl);
+            });
+
+            // Model info
+            document.getElementById('model-used').textContent = `Modelo: ${data.model_used}`;
+            document.getElementById('confidence').textContent = `Confiança: ${data.confidence}%`;
+
+            // Show result container
+            resultContainer.classList.remove('hidden');
+            errorContainer.classList.add('hidden');
+        }
+
+        // =====================================================================
+        // Display Error
+        // =====================================================================
+        function displayError(message) {
+            document.getElementById('error-message').textContent = message;
+            errorContainer.classList.remove('hidden');
+            resultContainer.classList.add('hidden');
+        }
+
+        // =====================================================================
+        // Reset Form
+        // =====================================================================
+        function resetForm() {
+            form.reset();
+            resultContainer.classList.add('hidden');
+            errorContainer.classList.add('hidden');
+            loadingContainer.classList.add('hidden');
+        }
+
+        // =====================================================================
+        // Download Report
+        // =====================================================================
+        function downloadReport() {
+            const riskPercentage = document.getElementById('risk-percentage').textContent;
+            const riskLevel = document.getElementById('risk-level').textContent;
+            const modelUsed = document.getElementById('model-used').textContent;
+            const confidence = document.getElementById('confidence').textContent;
+
+            const reportText = `
+RELATÓRIO DE AVALIAÇÃO - PIMAIGUARD
+=====================================
+
+Data: ${new Date().toLocaleDateString('pt-BR')}
+
+RESULTADO
+---------
+Risco: ${riskPercentage}
+Nível: ${riskLevel}
+${modelUsed}
+${confidence}
+
+FATORES DE RISCO
+----------------
+${Array.from(document.querySelectorAll('#risk-factors > div'))
+    .map(el => el.textContent.trim())
+    .join('\n')}
+
+AVISO IMPORTANTE
+----------------
+Este sistema fornece uma previsão baseada em inteligência artificial.
+Consulte um profissional de saúde para diagnóstico confirmado.
+
+© 2025 PimaGuard - Sistema de Prevenção de Diabetes
+            `;
+
+            const blob = new Blob([reportText], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `PimaGuard_Relatorio_${new Date().getTime()}.txt`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // =====================================================================
+        // Smooth scroll for anchor links
+        // =====================================================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

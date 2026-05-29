@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  pimaguard-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pimaguard-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/data:/app/backend/data
+      - ./backend/models:/app/backend/models
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+
+  pimaguard-web:
+    image: nginx:alpine
+    container_name: pimaguard-web
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - pimaguard-api
