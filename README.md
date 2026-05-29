@@ -251,8 +251,8 @@ MIT License - Veja LICENSE para detalhes
 
 ## 👨‍💻 Desenvolvido por
 
-**Seu Nome** | Full Stack Developer & Data Scientist  
-2025 | PimaGuard
+**Matheus Silva Gino** | Full Stack Developer & Data Scientist  
+2026 | PimaGuard
 
 ---
 
